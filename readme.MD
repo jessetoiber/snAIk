@@ -1,0 +1,1 @@
+"script to run a 2d game of snake with a basic AI decision algorithm. How to make it learn??" 
