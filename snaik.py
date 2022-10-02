@@ -219,6 +219,35 @@ def check_if_event_occured(event):
 def check_if_key_pressed(key):
     return pygame.key.get_pressed()[key]
 
+def draw_screen(screen):
+    snake_game_engine.set_head_direction(get_direction_by_thinking(snake_game_engine.state.head_direction, snake_game_engine.state.snake.as_array(), snake_game_engine.state.goal[0], snake_game_engine.state.goal[1]))
+    
+    #snake_game_engine.set_head_direction(always_win(snake_game_engine.state.snake.head.val.coords[0], snake_game_engine.state.snake.head.val.coords[1]))
+    
+    snake_game_engine.execute_game_tick()
+    
+    for i in range(32):
+        for j in range(32):
+            pygame.draw.rect(screen, EMPTY_COLOR, get_rect_full(i, j))
+
+    snake = snake_game_engine.state.snake.as_array()
+    for i in range(len(snake)):
+        snake_segment = snake[i]
+        color = None
+        if snake_segment.is_head:
+            color = SNAKE_HEAD_COLOR
+        else:
+            color = SNAKE_BODY_COLOR
+
+        (l, t) = snake_segment.coords
+        pygame.draw.rect(screen, color, get_rect(l, t))
+
+
+    (l, t) = snake_game_engine.state.goal
+    pygame.draw.rect(screen, GOAL_COLOR, get_rect_full(l, t))
+
+    # Flip the display
+    pygame.display.flip()
 
 def get_direction_from_user_input():
     keys = pygame.key.get_pressed()
@@ -338,56 +367,34 @@ def get_direction_by_thinking(current_direction, snake, goalx, goaly):
     
     return max_dir
 ## $$ ##
-
-# Set up the drawing window
-screen = pygame.display.set_mode([576, 576])
-pygame.display.set_caption("SNaiK")
-snake_game_engine = SnakeEngine()
-
-# Run until the user asks to quit
-user_exited = False
-while not user_exited:
-
-    if check_if_event_occured(pygame.QUIT):
-        user_exited = True
-
-    if check_if_key_pressed(pygame.K_SPACE):
-        snake_game_engine.restart()
-       
-    # set next move here
-    if snake_game_engine.running:
-        snake_game_engine.set_head_direction(get_direction_by_thinking(snake_game_engine.state.head_direction, snake_game_engine.state.snake.as_array(), snake_game_engine.state.goal[0], snake_game_engine.state.goal[1]))
-        
-        #snake_game_engine.set_head_direction(always_win(snake_game_engine.state.snake.head.val.coords[0], snake_game_engine.state.snake.head.val.coords[1]))
-        
-        snake_game_engine.execute_game_tick()
-
-        
-        for i in range(32):
-            for j in range(32):
-                pygame.draw.rect(screen, EMPTY_COLOR, get_rect_full(i, j))
-
-        snake = snake_game_engine.state.snake.as_array()
-        for i in range(len(snake)):
-            snake_segment = snake[i]
-            color = None
-            if snake_segment.is_head:
-                color = SNAKE_HEAD_COLOR
-            else:
-                color = SNAKE_BODY_COLOR
-
-            (l, t) = snake_segment.coords
-            pygame.draw.rect(screen, color, get_rect(l, t))
+###################################################
 
 
-        (l, t) = snake_game_engine.state.goal
-        pygame.draw.rect(screen, GOAL_COLOR, get_rect_full(l, t))
 
-        # Flip the display
-        pygame.display.flip()
+# script start entry point below
+if __name__ == '__main__':
     
-    time.sleep(tick_rate_seconds)
+    # Set up the drawing window
+    screen = pygame.display.set_mode([576, 576])
+    pygame.display.set_caption("SNaiK")
+    snake_game_engine = SnakeEngine()
 
-# Done! Time to quit.
-pygame.quit()
+    # Run until the user asks to quit
+    user_exited = False
+    while not user_exited:
+
+        if check_if_event_occured(pygame.QUIT):
+            user_exited = True
+
+        if check_if_key_pressed(pygame.K_SPACE):
+            snake_game_engine.restart()
+        
+        # set next move here
+        if snake_game_engine.running:
+            draw_screen(screen)
+        
+        time.sleep(tick_rate_seconds)
+
+    # Done! Time to quit.
+    pygame.quit()
 
