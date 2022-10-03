@@ -1,6 +1,6 @@
-snaik.py: script to run a 2d game of snake with a basic AI decision algorithm. How to make it learn??
+## 2d game of snake with a basic AI decision algorithm that we want to implement a ML learning model into with 0 prior ML knowledge. 
 
-hack to run:
-1. in vs code: Terminal -> New Terminal
-2. run `./venv/scripts/activate; py snaik.py; deactivate` in new terminal window
-3. plz work
+# Install and run on windows:
+1. Create a venv `py -m venv venv`
+2. Install dependencies `pip install .`
+3. Run `py snake.py`
