@@ -16,7 +16,6 @@ long_description = (here / "README.md").read_text(encoding="utf-8")
 
 setup(
 
-    # $ pip install snAIk
   
     name="snAIk",  # Required
     version="2.1.0",  # Required
