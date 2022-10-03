@@ -23,7 +23,7 @@ setup(
 
     packages=find_packages(where="."),  # Required
     
-    python_requires=">=3.10.6",
+    python_requires="=3.10.6",
     # This field lists other packages that your project depends on to run.
     # Any package you put here will be installed by pip when your project is
     # installed, so they must be valid existing projects.
@@ -31,5 +31,4 @@ setup(
     # For an analysis of "install_requires" vs pip's requirements files see:
     # https://packaging.python.org/discussions/install-requires-vs-requirements/
     install_requires=["numpy", "pygame", "pandas"],  # Optional
-
 )
