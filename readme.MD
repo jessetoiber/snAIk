@@ -3,4 +3,4 @@
 # Install and run on windows:
 1. Create a venv `py -m venv venv`
 2. Install dependencies `pip install .`
-3. Run `py snake.py`
+3. Run `py snaik.py`
