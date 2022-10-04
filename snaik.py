@@ -2,6 +2,7 @@ from enum import Enum
 import time
 import random
 from pandas import *
+import pygame
 
 class ListNode:
     def __init__(self, val):
@@ -203,10 +204,6 @@ towards_goal = 100
 not_die = 1000
 
 
-
-import pygame
-pygame.init()
-
 def get_rect_full(l, t):
     return (l*top_px_const, t*left_px_const, top_px_const, left_px_const)
 
@@ -220,12 +217,6 @@ def check_if_key_pressed(key):
     return pygame.key.get_pressed()[key]
 
 def draw_screen(screen):
-    snake_game_engine.set_head_direction(get_direction_by_thinking(snake_game_engine.state.head_direction, snake_game_engine.state.snake.as_array(), snake_game_engine.state.goal[0], snake_game_engine.state.goal[1]))
-    
-    #snake_game_engine.set_head_direction(always_win(snake_game_engine.state.snake.head.val.coords[0], snake_game_engine.state.snake.head.val.coords[1]))
-    
-    snake_game_engine.execute_game_tick()
-    
     for i in range(32):
         for j in range(32):
             pygame.draw.rect(screen, EMPTY_COLOR, get_rect_full(i, j))
@@ -373,8 +364,10 @@ def get_direction_by_thinking(current_direction, snake, goalx, goaly):
 
 # script start entry point below
 if __name__ == '__main__':
-    
+
     # Set up the drawing window
+    pygame.init()
+
     screen = pygame.display.set_mode([576, 576])
     pygame.display.set_caption("SNaiK")
     snake_game_engine = SnakeEngine()
@@ -391,6 +384,8 @@ if __name__ == '__main__':
         
         # set next move here
         if snake_game_engine.running:
+            snake_game_engine.set_head_direction(get_direction_by_thinking(snake_game_engine.state.head_direction, snake_game_engine.state.snake.as_array(), snake_game_engine.state.goal[0], snake_game_engine.state.goal[1]))
+            snake_game_engine.execute_game_tick()
             draw_screen(screen)
         
         time.sleep(tick_rate_seconds)
