@@ -1,8 +1,8 @@
 from pandas import *
-from game.game_models import *
-from game.game_engine import *
-from game.game_graphics import *
-from game.game_next_move_decision_helpers import *
+from src.game.game_models import *
+from src.game.game_engine import *
+from src.game.game_graphics import *
+from src.game.game_next_move_decision_helpers import *
 import time
 
 # game constants
