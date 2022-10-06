@@ -1,5 +1,5 @@
 import pygame
-from game_models import Direction
+from game.game_models import Direction
 
 # graphic constants
 EMPTY_COLOR = (40, 122, 44)

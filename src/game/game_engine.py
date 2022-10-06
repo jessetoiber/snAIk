@@ -1,4 +1,4 @@
-from game_models import *
+from game.game_models import *
 
 class GameEngine:
     __ignore_conflict_moves = False

@@ -1,5 +1,5 @@
-from game_models import Direction
-from game_graphics import GameGraphicsWindow
+from game.game_models import Direction
+from game.game_graphics import GameGraphicsWindow
 
 # file contains 3 methods for deciding the snakes next move
 # only one can be used at a time
