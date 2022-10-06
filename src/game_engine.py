@@ -1,4 +1,4 @@
-from models import *
+from src.models import *
 
 class SnakeEngine:
     __ignore_conflict_moves = False

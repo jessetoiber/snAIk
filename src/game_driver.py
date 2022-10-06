@@ -1,10 +1,9 @@
-import time
 from pandas import *
 import pygame
-from models import *
-from game_engine import *
+from src.models import *
+from src.game_engine import *
+import time
 
-   
 ## GLOBAL CONSTANTS
 
 # graphic constants
@@ -233,10 +232,3 @@ def init_game_window():
     pygame.font.init() 
     pygame.display.set_caption("SNaiK: he just wants to be real.")
     return pygame.display.set_mode([SCREEN_HEIGHT, SCREEN_WIDTH])
-
-
-# script start entry point below
-if __name__ == '__main__':
-    run_snake_game()
-    
-
