@@ -1,5 +1,7 @@
 from src.game.game_models import *
-
+from src.game.game_next_move_decision_helpers import *
+from src.game.game_graphics import *
+import time
 class GameEngine:
     __ignore_conflict_moves = False
     def __init__(self):
@@ -7,9 +9,31 @@ class GameEngine:
 
     def restart(self):
         self.state = GameState()
+        self.window = GameGraphicsWindow()
         self.snake_still_alive = True
+        self.running = True
+    
+    def quit(self):
+        self.running = False
 
-    def execute_game_tick(self, direction):
+    def execute_game_tick(self, tick_speed_seconds):
+        # if user closed game window
+        if GameGraphicsWindow.check_if_user_quit():
+            self.quit()
+            return
+
+        if GameGraphicsWindow.check_if_user_restart():
+            self.restart()
+            return
+        
+        time.sleep(tick_speed_seconds)
+
+        if not self.snake_still_alive:
+            self.window.display_restart_game_text()
+            return
+
+        direction = self.__get_next_direction_for_head()
+
         if direction is not None:
             if not self.__ignore_conflict_moves or not Direction.is_death_combo(self.state.head_direction, direction):
                 self.state.head_direction = direction
@@ -30,7 +54,17 @@ class GameEngine:
             self.state.snake.add(old_tail_copy)
             self.place_new_goal()
 
+        self.window.draw_screen(self.state)
         #self.state.print()      
+
+    def __get_next_direction_for_head(self):
+        # here we control how to decide the snake's next move
+        #
+        # return get_player_manual_move_input()
+        #   OR
+        # return always_win(self.state.goal[0], self.state.goal[1])
+        #   OR
+        return get_direction_by_thinking(self.state.head_direction, self.state.snake.as_array(), self.state.goal[0], self.state.goal[1])
 
     def move_snake_segments(self):
         cur = self.state.snake.head

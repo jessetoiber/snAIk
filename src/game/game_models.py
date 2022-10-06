@@ -1,4 +1,5 @@
 from enum import Enum
+from pandas import *
 import random
 
 class ListNode:
@@ -75,6 +76,11 @@ class GameState:
         (x, y) = self.goal
         grid[x][y] = 'G'
 
+        grid = list(zip(*grid[::-1]))
+        grid = list(zip(*grid[::-1]))
+        grid = list(zip(*grid[::-1]))
+
+        print("\n----\n")
         print(DataFrame(grid))
 
 class TileType(Enum):
