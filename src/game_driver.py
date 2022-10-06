@@ -1,10 +1,9 @@
-import time
 from pandas import *
 import pygame
 from models import *
 from game_engine import *
+import time
 
-   
 ## GLOBAL CONSTANTS
 
 # graphic constants
@@ -28,6 +27,48 @@ not_die = 1000
 #
 
 ## END GLOBAL CONSTANTS
+
+def run_snake_game():
+    snake_game_engine = SnakeEngine()
+    screen = init_game_window()
+
+    # Run until the user asks to quit
+    while True:
+        # if user closed game window
+        if check_if_event_occured(pygame.QUIT):
+            break
+
+        # spacebar key to reset the game
+        if check_if_key_pressed(pygame.K_SPACE):
+            snake_game_engine.restart()
+
+        if not snake_game_engine.snake_still_alive:
+            display_restart_game_text(screen)
+        else:
+            run_single_game_move(snake_game_engine)
+            draw_screen(screen, snake_game_engine.state)
+
+        time.sleep(tick_rate_seconds)
+
+    pygame.quit()
+
+def init_game_window():    
+    pygame.init()
+    pygame.font.init() 
+    pygame.display.set_caption("SNaiK: he just wants to be real.")
+    return pygame.display.set_mode([SCREEN_HEIGHT, SCREEN_WIDTH])
+
+# moves the board exactly one move
+def run_single_game_move(engine):
+    # control how the sname decides next move
+    
+    # eg1) move_direction = get_direction_from_user_input()
+    # eg2) move_direction = always_win(snake_game_engine.state.goal[0], snake_game_engine.state.goal[1])
+    move_direction = get_direction_by_thinking(engine.state.head_direction, engine.state.snake.as_array(), engine.state.goal[0], engine.state.goal[1])
+    
+    engine.set_head_direction(move_direction)
+    engine.execute_game_tick()
+
 
 def get_rect_full(l, t):
     return (l*top_px_const, t*left_px_const, top_px_const, left_px_const)
@@ -184,59 +225,5 @@ def get_direction_by_thinking(current_direction, snake, goalx, goaly):
     return max_dir
 ## $$ ##
 
-# moves the board exactly one move. return False if user quits the game
-def run_single_game_move(engine):
-    
-    # close window to stop this program 
-    end_game = check_if_event_occured(pygame.QUIT)
-    if end_game:
-        return True
 
-    # spacebar key to reset the game
-    if check_if_key_pressed(pygame.K_SPACE):
-        engine.restart()
-    
-    # control how the sname decides next move
-    # eg1) move_direction = get_direction_from_user_input()
-    # eg2) move_direction = always_win(snake_game_engine.state.goal[0], snake_game_engine.state.goal[1])
-    move_direction = get_direction_by_thinking(engine.state.head_direction, engine.state.snake.as_array(), engine.state.goal[0], engine.state.goal[1])
-    engine.set_head_direction(move_direction)
-    engine.execute_game_tick()
-
-
-def run_snake_game():
-    snake_game_engine = SnakeEngine()
-    screen = init_game_window()
-
-    # Run until the user asks to quit
-    while True:
-        # if user closed game window
-        if check_if_event_occured(pygame.QUIT):
-            break
-
-        # spacebar key to reset the game
-        if check_if_key_pressed(pygame.K_SPACE):
-            snake_game_engine.restart()
-
-        if not snake_game_engine.snake_still_alive:
-            display_restart_game_text(screen)
-        else:
-            run_single_game_move(snake_game_engine)
-            draw_screen(screen, snake_game_engine.state)
-
-        time.sleep(tick_rate_seconds)
-
-    pygame.quit()
-
-def init_game_window():    
-    pygame.init()
-    pygame.font.init() 
-    pygame.display.set_caption("SNaiK: he just wants to be real.")
-    return pygame.display.set_mode([SCREEN_HEIGHT, SCREEN_WIDTH])
-
-
-# script start entry point below
-if __name__ == '__main__':
-    run_snake_game()
-    
 
