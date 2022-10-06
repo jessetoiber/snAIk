@@ -2,25 +2,32 @@ import time
 from pandas import *
 import pygame
 from models import *
+from game_engine import *
 
    
-######################################################################
-# global graphic constants
+## GLOBAL CONSTANTS
+
+# graphic constants
 EMPTY_COLOR = (40, 122, 44)
 GOAL_COLOR = (255, 0, 0)
 SNAKE_HEAD_COLOR = (40, 122, 255)
 SNAKE_BODY_COLOR = (40, 255, 44)
-
+RESTART_TXT_COLOR = (255, 255, 255)
+SCREEN_WIDTH = SCREEN_HEIGHT = 576
 left_px_const = 18
 top_px_const = 18
+#
 
 # game constants
-tick_rate_seconds = .05
+tick_rate_seconds = .001
+#
 
 # decision making weightings
 towards_goal = 100
 not_die = 1000
+#
 
+## END GLOBAL CONSTANTS
 
 def get_rect_full(l, t):
     return (l*top_px_const, t*left_px_const, top_px_const, left_px_const)
@@ -34,12 +41,12 @@ def check_if_event_occured(event):
 def check_if_key_pressed(key):
     return pygame.key.get_pressed()[key]
 
-def draw_screen(screen):
+def draw_screen(screen, gamestate):
     for i in range(32):
         for j in range(32):
             pygame.draw.rect(screen, EMPTY_COLOR, get_rect_full(i, j))
 
-    snake = snake_game_engine.state.snake.as_array()
+    snake = gamestate.snake.as_array()
     for i in range(len(snake)):
         snake_segment = snake[i]
         color = None
@@ -52,12 +59,18 @@ def draw_screen(screen):
         pygame.draw.rect(screen, color, get_rect(l, t))
 
 
-    (l, t) = snake_game_engine.state.goal
+    (l, t) = gamestate.goal
     pygame.draw.rect(screen, GOAL_COLOR, get_rect_full(l, t))
-
-    # Flip the display
     pygame.display.flip()
 
+def display_restart_game_text(screen):
+    font = pygame.font.SysFont('Courier', 30)
+    text_surface = font.render("  Press <spacebar> to restart  ", True, (0, 0, 0)) 
+    screen.blit(text_surface, (0, 0))
+    pygame.display.flip()
+
+
+# can be used if you want to play the game via WASD keyboard input
 def get_direction_from_user_input():
     keys = pygame.key.get_pressed()
     if keys[pygame.K_a]:
@@ -71,11 +84,8 @@ def get_direction_from_user_input():
     else:
         return None
 
+# use as the next move function to demo the "always win" cheese
 def always_win(x,y):
-    # if x == 0:
-    #     return Direction.DOWN
-    # if y == 0:
-    #     return Direction.LEFT
     if y == 31:
         if x % 2 == 0:
             return Direction.RIGHT
@@ -145,9 +155,6 @@ def get_direction_by_thinking(current_direction, snake, goalx, goaly):
             move_map[Direction.UP] = 0
 
     # not die is good
-
-    # if not any(move_map[direction] > 0 for direction in Direction.ALL_DIRECTIONS):
-    #     move_map[random.choice(Direction.ALL_DIRECTIONS)] += 10
     
     # if the death move, bad move
     for potential_dir in Direction.ALL_DIRECTIONS:
@@ -176,38 +183,60 @@ def get_direction_by_thinking(current_direction, snake, goalx, goaly):
     
     return max_dir
 ## $$ ##
-###################################################
 
+# moves the board exactly one move. return False if user quits the game
+def run_single_game_move(engine):
+    
+    # close window to stop this program 
+    end_game = check_if_event_occured(pygame.QUIT)
+    if end_game:
+        return True
+
+    # spacebar key to reset the game
+    if check_if_key_pressed(pygame.K_SPACE):
+        engine.restart()
+    
+    # control how the sname decides next move
+    # eg1) move_direction = get_direction_from_user_input()
+    # eg2) move_direction = always_win(snake_game_engine.state.goal[0], snake_game_engine.state.goal[1])
+    move_direction = get_direction_by_thinking(engine.state.head_direction, engine.state.snake.as_array(), engine.state.goal[0], engine.state.goal[1])
+    engine.set_head_direction(move_direction)
+    engine.execute_game_tick()
+
+
+def run_snake_game():
+    snake_game_engine = SnakeEngine()
+    screen = init_game_window()
+
+    # Run until the user asks to quit
+    while True:
+        # if user closed game window
+        if check_if_event_occured(pygame.QUIT):
+            break
+
+        # spacebar key to reset the game
+        if check_if_key_pressed(pygame.K_SPACE):
+            snake_game_engine.restart()
+
+        if not snake_game_engine.snake_still_alive:
+            display_restart_game_text(screen)
+        else:
+            run_single_game_move(snake_game_engine)
+            draw_screen(screen, snake_game_engine.state)
+
+        time.sleep(tick_rate_seconds)
+
+    pygame.quit()
+
+def init_game_window():    
+    pygame.init()
+    pygame.font.init() 
+    pygame.display.set_caption("SNaiK: he just wants to be real.")
+    return pygame.display.set_mode([SCREEN_HEIGHT, SCREEN_WIDTH])
 
 
 # script start entry point below
 if __name__ == '__main__':
-
-    # Set up the drawing window
-    pygame.init()
-
-    screen = pygame.display.set_mode([576, 576])
-    pygame.display.set_caption("SNaiK")
-    snake_game_engine = SnakeEngine()
-
-    # Run until the user asks to quit
-    user_exited = False
-    while not user_exited:
-
-        if check_if_event_occured(pygame.QUIT):
-            user_exited = True
-
-        if check_if_key_pressed(pygame.K_SPACE):
-            snake_game_engine.restart()
-        
-        # set next move here
-        if snake_game_engine.running:
-            snake_game_engine.set_head_direction(get_direction_by_thinking(snake_game_engine.state.head_direction, snake_game_engine.state.snake.as_array(), snake_game_engine.state.goal[0], snake_game_engine.state.goal[1]))
-            snake_game_engine.execute_game_tick()
-            draw_screen(screen)
-        
-        time.sleep(tick_rate_seconds)
-
-    # Done! Time to quit.
-    pygame.quit()
+    run_snake_game()
+    
 
