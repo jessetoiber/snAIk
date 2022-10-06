@@ -10,7 +10,8 @@ def get_player_manual_move_input():
     return GameGraphicsWindow.get_graphics_screen_move_key_input_direction()
 
 # use as the next move function to demo the "always win" cheese
-def always_win(x,y):
+# TODO this broke somewhere, idk how
+def always_win(x, y):
     if y == 31:
         if x % 2 == 0:
             return Direction.RIGHT
