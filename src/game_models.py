@@ -6,6 +6,7 @@ class ListNode:
         self.val: SnakeSegment = val
         self.next: ListNode = None
     
+# snake represented by a linked list as the data structure
 class LinkedList:
     def __init__(self):
         self.head = None

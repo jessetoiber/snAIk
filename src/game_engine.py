@@ -1,6 +1,6 @@
-from models import *
+from game_models import *
 
-class SnakeEngine:
+class GameEngine:
     __ignore_conflict_moves = False
     def __init__(self):
         self.restart()
@@ -9,7 +9,11 @@ class SnakeEngine:
         self.state = GameState()
         self.snake_still_alive = True
 
-    def execute_game_tick(self):
+    def execute_game_tick(self, direction):
+        if direction is not None:
+            if not self.__ignore_conflict_moves or not Direction.is_death_combo(self.state.head_direction, direction):
+                self.state.head_direction = direction
+
         # remember old tail details incase we reach goal
         old_tail = self.state.snake.tail.val
         old_tail_copy = SnakeSegment(old_tail.coords, old_tail.is_head)
@@ -26,12 +30,7 @@ class SnakeEngine:
             self.state.snake.add(old_tail_copy)
             self.place_new_goal()
 
-        #self.state.print()
-
-    def set_head_direction(self, direction):
-        if direction is not None:
-            if not self.__ignore_conflict_moves or not Direction.is_death_combo(self.state.head_direction, direction):
-                self.state.head_direction = direction            
+        #self.state.print()      
 
     def move_snake_segments(self):
         cur = self.state.snake.head
