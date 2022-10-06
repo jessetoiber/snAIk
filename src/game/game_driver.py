@@ -6,7 +6,7 @@ from src.game.game_next_move_decision_helpers import *
 import time
 
 # game constants
-tick_rate_seconds = .001
+tick_rate_seconds = .05
 
 def run_snake_game():
     game_engine = GameEngine()
@@ -34,8 +34,10 @@ def run_snake_game():
 def run_single_game_move(engine):
     # control how the sname decides next move
     
-    # eg1) move_direction = get_player_manual_move_input()
-    # eg2) move_direction = always_win(snake_game_engine.state.goal[0], snake_game_engine.state.goal[1])
+    # move_direction = get_player_manual_move_input()
+    #   OR
+    # move_direction = always_win(engine.state.goal[0], engine.state.goal[1])
+    #   OR
     move_direction = get_direction_by_thinking(engine.state.head_direction, engine.state.snake.as_array(), engine.state.goal[0], engine.state.goal[1])
     
-    engine.execute_game_tick(move_direction)
+    return engine.execute_game_tick(move_direction)
