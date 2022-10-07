@@ -32,6 +32,7 @@ class GameEngine:
             self.window.display_restart_game_text()
             return
 
+        # do the actual moving
         direction = self.__get_next_direction_for_head()
 
         if direction is not None:

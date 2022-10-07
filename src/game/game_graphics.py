@@ -10,6 +10,7 @@ RESTART_TXT_COLOR = (255, 255, 255)
 SCREEN_WIDTH = SCREEN_HEIGHT = 576
 left_px_const = 18
 top_px_const = 18
+
 class GameGraphicsWindow:
     def __init__(self):
         pygame.init()

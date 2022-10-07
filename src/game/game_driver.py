@@ -1,6 +1,6 @@
-from src.game.game_engine import *
+from src.game.game_engine import GameEngine
 
-__tick_rate_seconds = .008
+__tick_rate_seconds = .05
 
 def drive_game():
     game_engine = GameEngine()
