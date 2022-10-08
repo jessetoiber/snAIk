@@ -60,7 +60,7 @@ class GameState:
         snake_head = SnakeSegment((5, 10), True)
         self.snake.add(snake_head)
 
-    def print(self):
+    def to_string(self):
         grid = []
         for i in range(32):
             row = []
@@ -80,8 +80,7 @@ class GameState:
         grid = list(zip(*grid[::-1]))
         grid = list(zip(*grid[::-1]))
 
-        print("\n----\n")
-        print(DataFrame(grid))
+        return DataFrame(grid).to_string()
 
 class TileType(Enum):
     SNAKE_HEAD = 1

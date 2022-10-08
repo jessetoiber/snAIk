@@ -5,6 +5,8 @@
 2. Install dependencies `pip install -r requirements.txt`
 3. Run `py snaik.py`
 
+Run game with command line param `py snaik.py <output-file-name>` to record gamestate dataframe data to `data/<output-file-name>`
+
 # Notes
 
 Need to decide on

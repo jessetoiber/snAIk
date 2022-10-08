@@ -3,3 +3,4 @@
 dist/*
 snAIk.egg-info/*
 *__pycache__*
+data

@@ -1,11 +1,22 @@
 from src.game.game_models import *
 from src.game.game_next_move_decision_helpers import *
 from src.game.game_graphics import *
+from pathlib import Path
+from datetime import datetime
+
 import time
+import sys
 class GameEngine:
     __ignore_conflict_moves = False
     def __init__(self):
         self.restart()
+
+        self.game_data_output_file_name = None
+        if len(sys.argv) >= 2:
+            Path("data").mkdir(exist_ok=True)
+            file_name_without_ext = Path(sys.argv[1]).stem
+            gamestate_df_data_output_path = 'data/' + file_name_without_ext + datetime.now().strftime('__%m-%d-%y_%I%M%S') + '.txt'
+            self.gamestate_df_data_output_file = Path(gamestate_df_data_output_path).open('a')
 
     def restart(self):
         self.state = GameState()
@@ -14,6 +25,8 @@ class GameEngine:
         self.running = True
     
     def quit(self):
+        print("Gamestate dataframe data recorded at: " + self.gamestate_df_data_output_file.name)
+        self.gamestate_df_data_output_file.close()
         self.running = False
 
     def execute_game_tick(self, tick_speed_seconds):
@@ -56,7 +69,10 @@ class GameEngine:
             self.place_new_goal()
 
         self.window.draw_screen(self.state)
-        #self.state.print()      
+
+        if self.gamestate_df_data_output_file is not None:
+            self.gamestate_df_data_output_file.write(self.state.to_string() + '\n\n')
+
 
     def __get_next_direction_for_head(self):
         # here we control how to decide the snake's next move
@@ -96,7 +112,6 @@ class GameEngine:
         else:
             cur = self.state.snake.head.next
             while cur is not None:
-                snake_segment = cur.val
                 if (head_x, head_y) == cur.val.coords:
                     return True
                 cur = cur.next
