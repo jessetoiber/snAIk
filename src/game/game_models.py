@@ -71,7 +71,10 @@ class GameState:
         snake = self.snake.as_array()
         for i in range(len(snake)):
             (x, y) = snake[i].coords
-            grid[x][y] = 'O' if snake[i].is_head else '#'
+            if snake[i].is_head:
+                grid[x][y] = 'O'
+            else:
+                 grid[x][y] = '#'
 
         (x, y) = self.goal
         grid[x][y] = 'G'
@@ -80,7 +83,10 @@ class GameState:
         grid = list(zip(*grid[::-1]))
         grid = list(zip(*grid[::-1]))
 
-        return DataFrame(grid).to_string()
+        direction = next(direction for direction, value in vars(Direction).items() if value == self.head_direction)
+        df_string = DataFrame(grid).to_string()
+        df_string += "\n" + str(direction)
+        return df_string 
 
 class TileType(Enum):
     SNAKE_HEAD = 1

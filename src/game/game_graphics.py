@@ -5,7 +5,7 @@ from src.game.game_models import Direction
 EMPTY_COLOR = (40, 122, 44)
 GOAL_COLOR = (255, 0, 0)
 SNAKE_HEAD_COLOR = (40, 122, 255)
-SNAKE_BODY_COLOR = (40, 255, 44)
+SNAKE_BODY_COLOR = (20, 61, 125)
 RESTART_TXT_COLOR = (255, 255, 255)
 SCREEN_WIDTH = SCREEN_HEIGHT = 576
 left_px_const = 18

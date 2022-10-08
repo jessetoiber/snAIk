@@ -11,7 +11,7 @@ class GameEngine:
     def __init__(self):
         self.restart()
 
-        self.game_data_output_file_name = None
+        self.gamestate_df_data_output_file = None
         if len(sys.argv) >= 2:
             Path("data").mkdir(exist_ok=True)
             file_name_without_ext = Path(sys.argv[1]).stem
@@ -25,9 +25,11 @@ class GameEngine:
         self.running = True
     
     def quit(self):
-        print("Gamestate dataframe data recorded at: " + self.gamestate_df_data_output_file.name)
-        self.gamestate_df_data_output_file.close()
         self.running = False
+
+        if self.gamestate_df_data_output_file is not None: 
+            print("Gamestate dataframe data recorded at: " + self.gamestate_df_data_output_file.name)
+            self.gamestate_df_data_output_file.close()
 
     def execute_game_tick(self, tick_speed_seconds):
         # if user closed game window
@@ -65,6 +67,7 @@ class GameEngine:
         did_snake_reach_goal = self.check_if_goal_reached()
         if did_snake_reach_goal:
             self.state.score += 100
+            old_tail_copy.is_head = False
             self.state.snake.add(old_tail_copy)
             self.place_new_goal()
 
