@@ -124,13 +124,19 @@ class GameEngine:
     def check_if_goal_reached(self):
         return self.state.snake.head.val.coords == self.state.goal
 
+    # TODO this may need optimization once the snake gets very large...
     def place_new_goal(self):
         snake_arr = self.state.snake.as_array()
         while True:
             (x, y) = (random.randrange(32), random.randrange(32))
+            valid_new_goal_xy = True
             for i in range(len(snake_arr)):
                 snake_segment_coords = snake_arr[i].coords
                 if (x, y) == snake_segment_coords:
-                    continue
-            break
+                    valid_new_goal_xy = False
+                    break
+
+            if (valid_new_goal_xy):
+                break
+
         self.state.goal = (x, y)
