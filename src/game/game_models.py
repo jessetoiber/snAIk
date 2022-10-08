@@ -72,7 +72,15 @@ class GameState:
         for i in range(len(snake)):
             (x, y) = snake[i].coords
             if snake[i].is_head:
-                grid[x][y] = 'O'
+                match self.head_direction:
+                    case Direction.UP:
+                        grid[x][y] = 'v'
+                    case Direction.DOWN:
+                        grid[x][y] = '^'
+                    case Direction.RIGHT:
+                        grid[x][y] = '>'
+                    case Direction.LEFT:
+                        grid[x][y] = '<'
             else:
                  grid[x][y] = '#'
 
